@@ -3,7 +3,7 @@
 import psycopg2
 import itertools
 import sys
-from dataflow_parser import generate_graph 
+from dataflow_parser import generate_graph
 
 conn = psycopg2.connect(
     host="localhost",
@@ -13,7 +13,7 @@ conn = psycopg2.connect(
 
 with conn.cursor() as cursor:
     for arg in sys.argv[1:]:
-        for mode in ["raw plan for", "decorrelated plan for", ""]:
+        for mode in ["raw plan for", "decorrelated plan for", "", "typed plan for"]:
             query = "explain " + mode + " " + arg
             cursor.execute(query)
             row = cursor.fetchone()

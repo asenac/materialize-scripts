@@ -10,8 +10,6 @@ def generate_graph(lines, graph_label):
     edges = set()
     current_node = None
 
-    print (lines)
-
     for line in lines:
         if line.startswith('%'):
             current_node = dict()
