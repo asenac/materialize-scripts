@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<body>
+<script src="//d3js.org/d3.v5.min.js"></script>
+<script src="https://unpkg.com/@hpcc-js/wasm@0.3.11/dist/index.min.js"></script>
+<script src="https://unpkg.com/d3-graphviz@3.0.5/build/d3-graphviz.js"></script>
+<div id="graph" style="text-align: center;"></div>
+<script>
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const dataflowId = urlParams.get('id');
+
+  var graphviz = d3.select("#graph").graphviz()
+      .transition(function () {
+          return d3.transition("main")
+              .ease(d3.easeLinear)
+              .delay(20)
+              .duration(10);
+      })
+      .logEvents(true)
+      .on("initEnd", render);
+
+  function render() {
+      fetch('http://localhost:8888/dataflow/' + dataflowId)
+          .then((response) => response.text())
+          .then((dot) => {
+              console.log(dot);
+              graphviz
+                  .renderDot(dot)
+                  .on("end", function () {
+                      updateEdges();
+                  });
+          });
+  }
+
+  function updateEdges() {
+      fetch('http://localhost:8888/dataflow-edges/' + dataflowId)
+          .then((response) => response.json())
+          .then((data) => {
+
+              for (const e in data) {
+                  let t = document.querySelectorAll('#' + e + ' > text');
+                  t.forEach((o) => {
+                      // console.log(o);
+                      if (o.innerHTML != data[e]) {
+                          console.log(e + " " + o.innerHTML + " " + data[e]);
+                          o.innerHTML = data[e];
+                      }
+                  });
+              }
+
+              setTimeout(updateEdges, 1000);
+          });
+  }
+
+</script>
