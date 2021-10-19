@@ -45,5 +45,5 @@ def generate_graph(lines, graph_label):
 
 
 if __name__ == '__main__':
-    lines = sys.stdin.readlines()
+    lines = [line.strip() for line in sys.stdin.readlines()]
     generate_graph(lines, 'stdin')
