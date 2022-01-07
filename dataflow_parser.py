@@ -16,6 +16,8 @@ def generate_graph(lines, graph_label):
             current_node['name'] = line[:line.find(' ')]
             current_node['text'] = line[line.find('=', 1) + 1:]
         elif len(line) == 0:
+            if current_node is None:
+                break
             nodes.append(current_node)
             current_node = None
         else:
@@ -31,7 +33,7 @@ def generate_graph(lines, graph_label):
     def node(x):
         return x.replace('%', 'node')
     def label(l):
-        return l.strip(' \n').replace('\n', '\\l').replace('"', '\\"').replace('|', '').replace('>', '\\>').replace('<', '\\<').replace('{', '\\{').replace('}', '\\}') + '\\l'
+        return l.strip(' \n').replace('\\', '\\\\').replace('\n', '\\l').replace('"', '\\"').replace('|', '').replace('>', '\\>').replace('<', '\\<').replace('{', '\\{').replace('}', '\\}') + '\\l'
 
     sys.stdout.write('digraph G {\n    label="%s"\n' % (label(graph_label)))
 
